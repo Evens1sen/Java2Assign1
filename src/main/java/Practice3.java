@@ -57,7 +57,7 @@ public class Practice3 {
         return list.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    public static int[] filter(int[] nums, int funcNum) {
+    public static int[] filterByStream(int[] nums, int funcNum) {
         if (funcNum == 1) {
             return Arrays.stream(nums).filter((i) -> i % 2 == 0).toArray();
         } else if (funcNum == 2) {
