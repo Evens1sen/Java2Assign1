@@ -1,12 +1,13 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Practice3 {
 
+    static Map<Integer, Predicate<Integer>> funcMap = new HashMap<>();
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        String funcInfo = """
+        String prompt = """
                 Please input the function No:
                 1 - get even numbers
                 2 - Get odd numbers
@@ -14,8 +15,13 @@ public class Practice3 {
                 4 - Get prime numbers that are bigger than 5
                 0 - Quit""";
 
+        funcMap.put(1, i -> i % 2 == 0);
+        funcMap.put(2, i -> i % 2 != 0);
+        funcMap.put(3, Practice3::isPrime);
+        funcMap.put(4, i -> (i % 2 == 0 && isPrime(i)));
+
         while (true) {
-            System.out.println(funcInfo);
+            System.out.println(prompt);
 
             int funcNum = in.nextInt();
             if (funcNum == 0) {
@@ -31,11 +37,24 @@ public class Practice3 {
                 nums[i] = in.nextInt();
             }
 
-            int[] res = filter(nums, funcNum);
+            int[] res = filter(nums, funcMap.get(funcNum));
             System.out.println("Filter results:");
             System.out.println(Arrays.toString(res));
         }
 
+    }
+
+    public static int[] filter(int[] nums, Predicate<Integer> predicate) {
+        List<Integer> list = new LinkedList<>(Arrays.stream(nums).boxed().toList());
+        Iterator<Integer> iter = list.iterator();
+        while (iter.hasNext()) {
+            Integer x = iter.next();
+            if (!predicate.test(x)) {
+                iter.remove();
+            }
+        }
+
+        return list.stream().mapToInt(Integer::intValue).toArray();
     }
 
     public static int[] filter(int[] nums, int funcNum) {
