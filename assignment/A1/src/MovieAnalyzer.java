@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MovieAnalyzer {
@@ -59,6 +58,66 @@ public class MovieAnalyzer {
                 this.gross = Integer.parseInt(movieInfo[15].substring(1, movieInfo[15].length() - 1).replace(" ", ""));
             }
         }
+
+        public String getSeriesTitle() {
+            return seriesTitle;
+        }
+
+        public Integer getReleasedYear() {
+            return releasedYear;
+        }
+
+        public String getCertificate() {
+            return certificate;
+        }
+
+        public Integer getRuntime() {
+            return runtime;
+        }
+
+        public String getGenre() {
+            return genre;
+        }
+
+        public Double getImdbRating() {
+            return imdbRating;
+        }
+
+        public String getOverview() {
+            return overview;
+        }
+
+        public Integer getMetaScore() {
+            return metaScore;
+        }
+
+        public String getDirector() {
+            return director;
+        }
+
+        public String getStar1() {
+            return star1;
+        }
+
+        public String getStar2() {
+            return star2;
+        }
+
+        public String getStar3() {
+            return star3;
+        }
+
+        public String getStar4() {
+            return star4;
+        }
+
+        public Integer getNoOfVotes() {
+            return noOfVotes;
+        }
+
+        public Integer getGross() {
+            return gross;
+        }
     }
 
     List<Movie> movieList;
@@ -106,9 +165,24 @@ public class MovieAnalyzer {
         return new Movie(movieInfo);
     }
 
+    public Map<Integer, Integer> getMovieCountByYear() {
+        Map<Integer, Integer> unsorted = movieList.stream()
+                .collect(Collectors.groupingBy(Movie::getReleasedYear, Collectors.summingInt(m -> 1)));
+
+        LinkedHashMap<Integer, Integer> res = new LinkedHashMap<>();
+        unsorted.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+                .forEachOrdered(x -> res.put(x.getKey(), x.getValue()));
+        return res;
+    }
+
 
     public static void main(String[] args) {
         MovieAnalyzer movieAnalyzer = new MovieAnalyzer("/Users/mhy/Code/javaworkspace/CS209/assignment/A1/resources/imdb_top_500.csv");
+
+        // Q1
+        Map<Integer, Integer> movieCountByYear = movieAnalyzer.getMovieCountByYear();
+        System.out.println(movieCountByYear);
     }
 
 }
