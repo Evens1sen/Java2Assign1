@@ -15,7 +15,7 @@ public class MovieAnalyzer {
 
         Integer runtime; // Total runtime of the movie
 
-        String genre; // Genre of the movie
+        List<String> genre; // Genre of the movie
 
         Double imdbRating; // Rating of the movie at IMDB site
 
@@ -42,7 +42,14 @@ public class MovieAnalyzer {
             this.releasedYear = Integer.parseInt(movieInfo[2]);
             this.certificate = movieInfo[3];
             this.runtime = Integer.parseInt(movieInfo[4].split(" ")[0]);
-            this.genre = movieInfo[5];
+
+            this.genre = new ArrayList<>();
+            if (movieInfo[5].charAt(0) != '"') {
+                this.genre.add(movieInfo[5]);
+            } else {
+                this.genre = Arrays.asList(movieInfo[5].substring(1, movieInfo[5].length() - 1).split("  "));
+            }
+
             this.imdbRating = Double.parseDouble(movieInfo[6]);
             this.overview = movieInfo[7];
             this.metaScore = movieInfo[8].equals("") ? null : Integer.parseInt(movieInfo[8]);
@@ -52,6 +59,7 @@ public class MovieAnalyzer {
             this.star3 = movieInfo[12];
             this.star4 = movieInfo[13];
             this.noOfVotes = movieInfo[14].equals("") ? null : Integer.parseInt(movieInfo[14]);
+
             if (movieInfo[15].equals("")) {
                 this.gross = null;
             } else {
@@ -75,7 +83,7 @@ public class MovieAnalyzer {
             return runtime;
         }
 
-        public String getGenre() {
+        public List<String> getGenre() {
             return genre;
         }
 
@@ -176,6 +184,27 @@ public class MovieAnalyzer {
         return res;
     }
 
+    public Map<String, Integer> getMovieCountByGenre() {
+        Map<String, Integer> unsorted = new TreeMap<>();
+        for (Movie movie : movieList) {
+            for (String genre : movie.getGenre()) {
+                unsorted.put(genre, unsorted.getOrDefault(genre, 0) + 1);
+            }
+        }
+
+        LinkedHashMap<String, Integer> res = new LinkedHashMap<>();
+        unsorted.entrySet().stream()
+                .sorted((o1, o2) -> {
+                    if (o1.getValue().equals(o2.getValue())) {
+                        return o1.getKey().compareTo(o2.getKey());
+                    }
+
+                    return -o1.getValue().compareTo(o2.getValue());
+                })
+                .forEachOrdered(x -> res.put(x.getKey(), x.getValue()));
+        return res;
+    }
+
 
     public static void main(String[] args) {
         MovieAnalyzer movieAnalyzer = new MovieAnalyzer("/Users/mhy/Code/javaworkspace/CS209/assignment/A1/resources/imdb_top_500.csv");
@@ -183,6 +212,10 @@ public class MovieAnalyzer {
         // Q1
         Map<Integer, Integer> movieCountByYear = movieAnalyzer.getMovieCountByYear();
         System.out.println(movieCountByYear);
+
+        // Q2
+        Map<String, Integer> movieCountByGenre = movieAnalyzer.getMovieCountByGenre();
+        System.out.println(movieCountByGenre);
     }
 
 }
