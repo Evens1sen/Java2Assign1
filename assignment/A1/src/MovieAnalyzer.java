@@ -231,21 +231,43 @@ public class MovieAnalyzer {
         return unsorted;
     }
 
+    public List<String> getTopMovies(int top_k, String by) {
+        if (by.equals("runtime")) {
+            return movieList.stream()
+                    .sorted((o1, o2) -> o2.getRuntime() - o1.getRuntime())
+                    .map(Movie::getSeriesTitle)
+                    .limit(top_k)
+                    .collect(Collectors.toList());
+        } else if (by.equals("overview")) {
+            return movieList.stream()
+                    .sorted((o1, o2) -> o2.getOverview().length() - o1.getOverview().length())
+                    .map(Movie::getSeriesTitle)
+                    .limit(top_k)
+                    .collect(Collectors.toList());
+        } else {
+            return null;
+        }
+    }
+
 
     public static void main(String[] args) {
         MovieAnalyzer movieAnalyzer = new MovieAnalyzer("/Users/mhy/Code/javaworkspace/CS209/assignment/A1/resources/imdb_top_500.csv");
 
         // Q1
         Map<Integer, Integer> movieCountByYear = movieAnalyzer.getMovieCountByYear();
-        System.out.println(movieCountByYear);
+//        System.out.println(movieCountByYear);
 
         // Q2
         Map<String, Integer> movieCountByGenre = movieAnalyzer.getMovieCountByGenre();
-        System.out.println(movieCountByGenre);
+//        System.out.println(movieCountByGenre);
 
         // Q3
         Map<List<String>, Integer> coStarCount = movieAnalyzer.getCoStarCount();
-        System.out.println(coStarCount);
+//        System.out.println(coStarCount);
+
+        // Q4
+        List<String> topKMovies = movieAnalyzer.getTopMovies(8, "runtime");
+//        System.out.println(topKMovies);
     }
 
 }
