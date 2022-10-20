@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MovieAnalyzer {
 
@@ -185,7 +186,7 @@ public class MovieAnalyzer {
     }
 
     public Map<String, Integer> getMovieCountByGenre() {
-        Map<String, Integer> unsorted = new TreeMap<>();
+        Map<String, Integer> unsorted = new HashMap<>();
         for (Movie movie : movieList) {
             for (String genre : movie.getGenre()) {
                 unsorted.put(genre, unsorted.getOrDefault(genre, 0) + 1);
@@ -205,6 +206,31 @@ public class MovieAnalyzer {
         return res;
     }
 
+    public Map<List<String>, Integer> getCoStarCount() {
+        Map<List<String>, Integer> unsorted = new HashMap<>();
+        for (Movie movie : movieList) {
+            List<String> pair12 = Stream.of(movie.getStar1(), movie.getStar2()).sorted().collect(Collectors.toList());
+            unsorted.put(pair12, unsorted.getOrDefault(pair12, 0) + 1);
+
+            List<String> pair13 = Stream.of(movie.getStar1(), movie.getStar3()).sorted().collect(Collectors.toList());
+            unsorted.put(pair13, unsorted.getOrDefault(pair13, 0) + 1);
+
+            List<String> pair14 = Stream.of(movie.getStar1(), movie.getStar4()).sorted().collect(Collectors.toList());
+            unsorted.put(pair14, unsorted.getOrDefault(pair14, 0) + 1);
+
+            List<String> pair23 = Stream.of(movie.getStar2(), movie.getStar3()).sorted().collect(Collectors.toList());
+            unsorted.put(pair23, unsorted.getOrDefault(pair23, 0) + 1);
+
+            List<String> pair24 = Stream.of(movie.getStar2(), movie.getStar4()).sorted().collect(Collectors.toList());
+            unsorted.put(pair24, unsorted.getOrDefault(pair24, 0) + 1);
+
+            List<String> pair34 = Stream.of(movie.getStar3(), movie.getStar4()).sorted().collect(Collectors.toList());
+            unsorted.put(pair34, unsorted.getOrDefault(pair34, 0) + 1);
+        }
+
+        return unsorted;
+    }
+
 
     public static void main(String[] args) {
         MovieAnalyzer movieAnalyzer = new MovieAnalyzer("/Users/mhy/Code/javaworkspace/CS209/assignment/A1/resources/imdb_top_500.csv");
@@ -216,6 +242,10 @@ public class MovieAnalyzer {
         // Q2
         Map<String, Integer> movieCountByGenre = movieAnalyzer.getMovieCountByGenre();
         System.out.println(movieCountByGenre);
+
+        // Q3
+        Map<List<String>, Integer> coStarCount = movieAnalyzer.getCoStarCount();
+        System.out.println(coStarCount);
     }
 
 }
