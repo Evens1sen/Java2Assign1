@@ -20,7 +20,7 @@ public class MovieAnalyzer {
 
         List<String> genre; // Genre of the movie
 
-        Double imdbRating; // Rating of the movie at IMDB site
+        Float imdbRating; // Rating of the movie at IMDB site
 
         String overview; // mini story/ summary
 
@@ -56,7 +56,7 @@ public class MovieAnalyzer {
                         .split(", "));
             }
 
-            this.imdbRating = Double.parseDouble(movieInfo[6]);
+            this.imdbRating = Float.parseFloat(movieInfo[6]);
             this.overview = movieInfo[7].charAt(0) == '"'
                     ? movieInfo[7].substring(1, movieInfo[7].length() - 1) : movieInfo[7];
 
@@ -97,7 +97,7 @@ public class MovieAnalyzer {
             return genre;
         }
 
-        public Double getImdbRating() {
+        public Float getImdbRating() {
             return imdbRating;
         }
 
