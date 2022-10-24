@@ -342,7 +342,7 @@ public class MovieAnalyzer {
     }
 
     public static void main(String[] args) {
-        MovieAnalyzer movieAnalyzer = new MovieAnalyzer("/Users/mhy/Code/javaworkspace/CS209/assignment/A1/resources/imdb_top_500.csv");
+        MovieAnalyzer movieAnalyzer = new MovieAnalyzer("./resources/imdb_top_500.csv");
         movieAnalyzer.movieList.stream()
                 .filter(movie -> movie.getGross() != null)
                 .map(Movie::getSeriesTitle)
